@@ -1685,12 +1685,12 @@ void CreateNanoGrid<SrcGridT>::processTree()
     dstData->mNodeCount[2] = static_cast<uint32_t>(nodeCount[2]);
 
     // Count number of active leaf level tiles
-    dstData->mTileCount[0] = reduce(Range1D(0,nodeCount[1]), uint32_t(0), [&](Range1D &r, uint32_t sum){
+    dstData->mTileCount[0] = reduce(Range1D(0,nodeCount[1]), uint32_t(0), [&](const Range1D &r, uint32_t sum){
         for (auto i=r.begin(); i!=r.end(); ++i) sum += mSrcNodeAcc.template node<1>(i).getValueMask().countOn();
         return sum;}, std::plus<uint32_t>());
 
     // Count number of active lower internal node tiles
-    dstData->mTileCount[1] = reduce(Range1D(0,nodeCount[2]), uint32_t(0), [&](Range1D &r, uint32_t sum){
+    dstData->mTileCount[1] = reduce(Range1D(0,nodeCount[2]), uint32_t(0), [&](const Range1D &r, uint32_t sum){
         for (auto i=r.begin(); i!=r.end(); ++i) sum += mSrcNodeAcc.template node<2>(i).getValueMask().countOn();
         return sum;}, std::plus<uint32_t>());
 
@@ -1699,7 +1699,7 @@ void CreateNanoGrid<SrcGridT>::processTree()
     for (auto it = mSrcNodeAcc.root().cbeginValueOn(); it; ++it) dstData->mTileCount[2] += 1;
 
     // Count number of active voxels
-    dstData->mVoxelCount = reduce(Range1D(0, nodeCount[0]), uint64_t(0), [&](Range1D &r, uint64_t sum){
+    dstData->mVoxelCount = reduce(Range1D(0, nodeCount[0]), uint64_t(0), [&](const Range1D &r, uint64_t sum){
         for (auto i=r.begin(); i!=r.end(); ++i) sum += mSrcNodeAcc.template node<0>(i).getValueMask().countOn();
         return sum;}, std::plus<uint64_t>());
 
